@@ -28,42 +28,17 @@ class HomeController extends Controller
     public function resizeAndDownload()
     {
 
-        // ini_get('allow_url_fopen') ? 'Enabled' : 'Disabled';
-        // ini_get('allow_url_fopen') ? 'Enabled' : 'Disabled';
-        // get data where resize link is empty or null
         $links = Thumbnail::whereNull('resize_link')->orWhere('resize_link', '')->get();
-
-        // $image->resize(200, 200, function($constraint){
-        //     $constraint->aspectRatio();
-        // });
-        // dd($links);
 
         foreach ($links as $link) {
 
             $path = $link->image_link;
-            // if i get any encoded data in url, decode it
-            // dd(urldecode(basename($path)));
-            // $path2 = 'http://www.chutyrooms.com/images/'.urlencode(basename($path));
-            //$extension = strrchr( $path, '/');
-            // dd($path2);
-
-            // get client original name
-
             $filename = basename($path);
-            // dd($filename);
-
-            // get extension
             $extension = strrchr($filename, '.');
-            // dd($extension);
-
-            // get filename without extension
             $name = str_replace($extension, '', $filename);
             $name = preg_replace('/[^A-Za-z0-9\-]/', '', $name);
-
-
             $random = Str::random(10);
             $date = date('d-m-Y-H-i-s');
-
 
             $filename = 'thumbnail-images/' . $name . $random . $date . '.' . 'jpg';
 
@@ -79,7 +54,6 @@ class HomeController extends Controller
             })->save(public_path($filename));
 
             $link->resize_link = $filename;
-
 
             $link->save();
         }
