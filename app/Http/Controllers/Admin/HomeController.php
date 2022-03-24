@@ -61,7 +61,11 @@ class HomeController extends Controller
             $name = preg_replace('/[^A-Za-z0-9\-]/', '', $name);
 
 
-            $filename = 'thumbnail-images/' . $name . '.' . 'jpg';
+            $random = Str::random(10);
+            $date = date('d-m-Y-H-i-s');
+
+
+            $filename = 'thumbnail-images/' . $name . $random . $date . '.' . 'jpg';
 
             $path_to = file_get_contents($path, false, stream_context_create([
                 'ssl' => [
@@ -73,6 +77,7 @@ class HomeController extends Controller
             Image::make($path_to)->resize(200, 100, function ($constraint) {
                 $constraint->aspectRatio();
             })->save(public_path($filename));
+
             $link->resize_link = $filename;
 
 
